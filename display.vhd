@@ -19,6 +19,7 @@ begin
                 when "01" => sel_out <= "1101"; -- ativa display 1
                 when "10" => sel_out <= "1011"; -- ativa display 2
                 when "11" => sel_out <= "0111"; -- ativa display 3
+                when others => sel_out <= "0000"; -- tudo apagado
             end case;
         end if;
     end process;
