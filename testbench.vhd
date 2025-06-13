@@ -12,7 +12,38 @@ architecture Behavioral of tb_top is
     signal sel_in  : std_logic_vector(1 downto 0) := "00";
     signal sel_out : std_logic_vector(3 downto 0);
 
+    signal idx : integer := 0; 
+
+    type bcd_array is array (0 to 9) of std_logic_vector(3 downto 0);
+    constant bcd_values : bcd_array := (
+        "0000", -- 0
+        "0001", -- 1
+        "0010", -- 2
+        "0011", -- 3
+        "0100", -- 4
+        "0101", -- 5
+        "0110", -- 6
+        "0111", -- 7
+        "1000", -- 8
+        "1001"  -- 9
+    );
+
+    type sel_array is array (0 to 9) of std_logic_vector(1 downto 0);
+    constant sel_values : sel_array := (
+        "00", -- 0
+        "01", -- 1
+        "10", -- 2
+        "11", -- 3
+        "00", -- 0
+        "01", -- 1
+        "10", -- 2
+        "11", -- 3
+        "00", -- 0
+        "01"  -- 1
+    );
+
 begin
+
     DUT: entity work.top
         port map (
             clk => clk,
@@ -39,43 +70,18 @@ begin
         end loop;
     end process;
 
-    test_process: process
+    stimulus_process: process(clk)
     begin
-        wait for 62.5 ns;
-        sel_in <= "00"; -- Display 0
-        bcd <= "0000"; -- 0
-        wait for 62.5 ns;
-
-        bcd <= "0001"; -- 1
-        wait for 62.5 ns;
-
-        bcd <= "0010"; -- 2
-        sel_in <= "01"; -- Display 1
-        wait for 62.5 ns;
-
-        bcd <= "0011"; -- 3
-        wait for 62.5 ns;
-
-        bcd <= "0100"; -- 4
-        sel_in <= "10"; -- Display 2
-        wait for 62.5 ns;
-
-        bcd <= "0101"; -- 5
-        wait for 62.5 ns;
-
-        bcd <= "0110"; -- 6
-        sel_in <= "11"; -- Display 3
-        wait for 62.5 ns;
-
-        bcd <= "0111"; -- 7
-        wait for 62.5 ns;
-
-        bcd <= "1000"; -- 8
-        wait for 62.5 ns;
-
-        bcd <= "1001"; -- 9
-        wait for 62.5 ns;
-
-        wait;
+        if rising_edge(clk) then
+            if idx <= 9 then
+                sel_in <= sel_values(idx); -- Atualiza o display na subida
+            end if;
+        elsif falling_edge(clk) then
+            if idx <= 9 then
+                bcd <= bcd_values(idx);    -- Atualiza o BCD na descida
+                idx <= idx + 1;          
+            end if;
+        end if;
     end process;
+
 end Behavioral;
