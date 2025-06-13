@@ -1,3 +1,3 @@
-# sistemas_digitais_trab2
+# Trabalho 2 - Sistemas Digitais
 
 ![alt text](image.png)
